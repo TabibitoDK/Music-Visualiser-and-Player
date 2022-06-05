@@ -7,7 +7,7 @@ function preload () {
 }
 
 function setup () {
-    canvas = createCanvas(windowWidth / window.devicePixelRatio, windowHeight / window.devicePixelRatio);
+    canvas = createCanvas(windowWidth, windowHeight);
     imageManager.init();
     songManager.init();
     volumeManager.init();
@@ -47,7 +47,7 @@ function mouseClicked (e) {
 
 function touchMoved (e) {
     menuManager.touchMoved(e);
-    //e.preventDefault();
+    e.preventDefault();
 }
 
 function mouseReleased (e) {
