@@ -23,6 +23,7 @@ class songManagerCLASS {
     }
 
     inputEvent () {
+        // Handle input from file
         console.log(this.elt.files);
         this.elt.files.forEach(file => {
             let name = file.name;
@@ -32,15 +33,27 @@ class songManagerCLASS {
                 getAudioContext().decodeAudioData(reader.result).then(audioBuffer => bufferadd(audioBuffer));
             }
             function bufferadd (audioBuffer) {
-                songs.push(audioBuffer);
+                let bufferobj = {
+                    withData: true,
+                    data: audioBuffer,
+                }
+                songs.push(bufferobj);
                 menuManager.newSong(name);
             }
         });
     }
     
-    bufferchange (audioBuffer) {
-        MySong.setBuffer([audioBuffer.getChannelData(0), audioBuffer.getChannelData(1)])
-        MySong.stop();
+    bufferchange (bufferobj) {
+        // Change soud buffer on the song player (MySong) to the new song to play
+        // If not with data, means sog from web, go download it first
+        if (bufferobj.withData == false) {
+            youtubeManager.downloadSong(bufferobj);
+        }
+        // Has data, just change buffer directly
+        else {
+            MySong.setBuffer([bufferobj.data.getChannelData(0), bufferobj.data.getChannelData(1)])
+            MySong.stop();
+        }
     }
 }
 
@@ -61,10 +74,7 @@ class SoundVisualiser {
         this.angle = 2*PI / numberOfNodes;
     }
     update(dataArray) {
-        // let sumData = 1;
-        // for (let i=0 ; i<this.numberOfNodes ; i++) {
-        //     sumData = sumData + dataArray[i];
-        // }
+        // Update the data for sound visualiser
         for (let i=0 ; i<this.numberOfNodes ; i++) {
             let data = dataArray[i] * dataArray[i] / 4000;
             // let data = dataArray[i] / sumData * 500;
@@ -73,6 +83,7 @@ class SoundVisualiser {
     }
 }
 
+// Rotate line accourding to angle to create a curcular wave lines sound visualiser
 function Rotatedline (cx, cy, distancePoint, distance, angle) {
     let x = 0;
     let y = distancePoint;

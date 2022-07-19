@@ -30,6 +30,7 @@ class volumeManagerCLASS {
             volumeMaxLine.setAttribute("pointer-events", "visible");
         }
         volumeControl.onpointerout = function (e) {
+            console.log(e.pressure)
             if (e.buttons ==1) return;
             volumeControl.setAttribute("fill-opacity", "0.0");
             volumeSlider.setAttribute("fill-opacity", "0.0");

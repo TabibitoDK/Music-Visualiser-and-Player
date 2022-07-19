@@ -2,6 +2,7 @@ class MenuManagerCLASS {
     constructor () {};
 
     init () {
+        // Create element for the menu
         this.menuBackground = new Div(0, 0, 100, 100, "#ffffff", "menuBackground");
         this.menuPanel = new Div(10, 10, 90, 90, "#000000", "menuPanel", this.menuBackground.div);
         this.menuPanel.div.style("border-radius", "25px")
@@ -16,6 +17,8 @@ class MenuManagerCLASS {
         this.loadWeb.div.style("border-radius", "15px");
         this.loadWeb.div.style("border", "2px solid black");
         this.loadWeb.div.elt.innerHTML = `<p style="position: absolute; left: ${CW*4.5}px; top:${RH*-2.5}px ; font-size: ${RH * 3}px" >load web</p>`;
+        this.loadWebInput = new Div(0,0,29,4,"#ffffff00", "loadWebInput", "loadWeb");
+        this.loadWebInput.div.mouseClicked(youtubeManager.loadMetadata);
         this.inputWeb = createInput("web address");
         this.inputWeb.parent(this.menu.div);
         this.inputWeb.position(CW * 5, RH * 8);
@@ -36,9 +39,10 @@ class MenuManagerCLASS {
     }
 
     newSong (name) {
+        // Create a new song element div and place it in the menu
         let songDiv = new Div(2, 1 +(5*this.songcounter), 70, 5 +(5*this.songcounter), "#000000", `song${this.songcounter}`, this.currentPlaylist.div);
         songDiv.div.style("border-radius", "35px");
-        songDiv.div.elt.innerHTML = `<p style="color: white; position: absolute; left: ${CW*3}px;" >Playlist 01</p> <div style="background-color: white; position: absolute; left: ${CW * 64}px; top: ${RH * 1.2}px ; border-radius: 25px;" >'  --  '</div>`;
+        songDiv.div.elt.innerHTML = `<p style="pointer-events:none; color: white; position: absolute; left: ${CW*3}px;" >Playlist 01</p> <div style="background-color: white; position: absolute; left: ${CW * 64}px; top: ${RH * 1.2}px ; border-radius: 25px;" >'  --  '</div>`;
         songDiv.div.elt.setAttribute('data-songnum', `${this.songcounter}`);
         songDiv.div.elt.setAttribute('data-issong', `true`);
         songDiv.div.elt.children[0].innerHTML = name;
@@ -47,19 +51,28 @@ class MenuManagerCLASS {
     }
 
     touchMoved (e) {
+        // get the movement direction and moved distance form touch events
         if (e.movementX < 0) moves.left += Math.abs(e.movementX);
         if (e.movementX > 0) moves.right += Math.abs(e.movementX);
         if (e.movementY < 0) moves.up += Math.abs(e.movementY);
         if (e.movementY > 0) moves.down += Math.abs(e.movementY);
     }
     mouseClicked (e) {
+        // get the max moved direction
         let direction = Math.max(moves.left, moves.right, moves.up, moves.down);
+        // Determine wheather it is a drag or click
+        // A click if move < 100
         if (direction < 100) {
             songManager.playpause();
             return;
         }
+        // Swap left Display menu
         if (moves.left > 100) {
             this.menuBackground.div.style("display", "block");
+        }
+        // Swap right display settings
+        if (moves.right > 100) {
+            settingManager.settingBackground.div.style("display", "block");
         }
     }
 }
